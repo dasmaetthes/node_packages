@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>JS CSV</title>
+</head>
+
+<body>
+    <script>
+        function download_csv() {
+            var input = document.querySelector("#projektName").value;
+            var hash = crc32(input).toString(16);
+            var date = (new Date()).toISOString().slice(0, 10).replace(/-/g, "-").replace("T", " ");
+            var csv = 'Projekt: ' + input + '\nEWOIS: LKA_DEZ_63_' + date + '_' + hash;
+
+            var hiddenElement = document.createElement('a');
+            hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+            hiddenElement.target = '_blank';
+            hiddenElement.download = hash + '.txt';
+            hiddenElement.click();
+        }
+
+
+        function crc32(r) {
+            for (var a, o = [], c = 0; c < 256; c++) {
+                a = c;
+                for (var f = 0; f < 8; f++) a = 1 & a ? 3988292384 ^ a >>> 1 : a >>> 1;
+                o[c] = a
+            }
+            for (var n = -1, t = 0; t < r.length; t++) n = n >>> 8 ^ o[255 & (n ^ r.charCodeAt(t))];
+            return (-1 ^ n) >>> 0
+        };
+    </script>
+    <form>
+        Projekt: <input type="text" name="projektName" id="projektName"><button onclick="download_csv()">Start</button>
+    </form>
+
+</body>
+
+</html>
